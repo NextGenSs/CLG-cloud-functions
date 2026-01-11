@@ -1,0 +1,7 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    // ".read": "true",
+    ".write": "auth != null && (auth.token.email == 'kps.kispl@gmail.com' || auth.token.email == 'rishabh@gmail.com' || auth.token.email == 'qa.admin@gmail.com')"
+  }
+}

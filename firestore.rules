@@ -1,0 +1,95 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+  match /matches/{matchId}/innings/{inningNum} {
+  allow list: if request.auth != null;    // ADD THIS
+  allow read: if request.auth != null;
+  allow write: if request.auth != null && request.auth.token.email in [
+    'kps.kispl@gmail.com',
+    'qa.admin@gmail.com',
+    'rishabh@gmail.com'
+  ];
+}
+
+match /matches/{matchId}/innings/{inningNum}/overs/{overNum} {
+  allow list: if request.auth != null;   // ADD THIS
+  allow read: if request.auth != null;
+  allow write: if request.auth != null && request.auth.token.email in [
+    'kps.kispl@gmail.com',
+    'qa.admin@gmail.com',
+    'rishabh@gmail.com'
+  ];
+}
+
+match /matches/{matchId}/innings/{inningNum}/overs/{overNum}/balls/{ballId} {
+  allow list: if request.auth != null;   // ADD THIS
+  allow read: if request.auth != null;
+  allow write: if request.auth != null && request.auth.token.email in [
+    'kps.kispl@gmail.com',
+    'qa.admin@gmail.com',
+    'rishabh@gmail.com'
+  ];
+}
+
+    // Allow reads/writes to top-level match documents only for allowed admin emails
+    match /matches/{matchId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.token.email in [
+        'kps.kispl@gmail.com',
+        'qa.admin@gmail.com',
+    'rishabh@gmail.com'
+      ];
+    }
+
+    match /matches/{matchId}/scorecard/{inningId=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.token.email in [
+        'kps.kispl@gmail.com',
+        'qa.admin@gmail.com',
+    'rishabh@gmail.com'
+      ];
+    }
+    
+    match /matches/{matchId}/commentary/{inningDoc=**} {
+  allow read: if request.auth != null;
+  allow write: if request.auth != null
+                && request.auth.token.email in [
+                  'kps.kispl@gmail.com',
+                  'qa.admin@gmail.com',
+    'rishabh@gmail.com'
+                ];
+}
+
+    match /matches/{matchId}/innings/{inningNum} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.token.email in [
+        'kps.kispl@gmail.com',
+        'qa.admin@gmail.com',
+    'rishabh@gmail.com'
+      ];
+    }
+
+    match /matches/{matchId}/innings/{inningNum}/overs/{overNum} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.token.email in [
+        'kps.kispl@gmail.com',
+        'qa.admin@gmail.com',
+    'rishabh@gmail.com'
+      ];
+    }
+
+    match /matches/{matchId}/innings/{inningNum}/overs/{overNum}/balls/{ballId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.token.email in [
+        'kps.kispl@gmail.com',
+        'qa.admin@gmail.com',
+    'rishabh@gmail.com'
+      ];
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
