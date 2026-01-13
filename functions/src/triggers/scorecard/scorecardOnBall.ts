@@ -3,6 +3,7 @@ import * as admin from "firebase-admin";
 import { isValidBall } from "../../utils/ballUtils";
 import { FirestorePaths } from "../../constants/dbPaths";
 import { RTDBPaths } from "../../constants/rtdbPaths";
+import { getCurrentBattingTeamName, normalizeId } from "../../utils/helpers";
 
 const BATTERS = "batters";
 const BOWLERS = "bowlers";
@@ -16,11 +17,11 @@ export const scorecardOnBall = onValueWritten(
     const matchId = event.params.matchId;
     const newEvent = event.data.after.val();
     const oldEvent = event.data.before.val();
-
+console.log("scorecardonBall", {matchId, newEvent, oldEvent})
     // ----------------------------------
     // Guards
     // ----------------------------------
-    if (!newEvent || newEvent === oldEvent) return;
+    // if (!newEvent || newEvent === oldEvent) return;
     if (!isValidBall(newEvent)) return;
 
     const rtdb = admin.database();
@@ -102,13 +103,15 @@ export const scorecardOnBall = onValueWritten(
     const writes: Promise<any>[] = [];
 
     // ----------------------------------
-    // SUMMARY (EVERY BALL)
+    // SUMMARY
     // ----------------------------------
+    const xTeam = getCurrentBattingTeamName(match);
+    console.log("current team: ", xTeam);
     writes.push(
       summaryRef.set(
         {
           inning,
-          team: match.ct ?? null,
+          team: xTeam,
           runs,
           wickets,
           overs: oversStr,
@@ -190,7 +193,7 @@ export const scorecardOnBall = onValueWritten(
     );
 
     // ----------------------------------
-    // FREEZE PARTNERSHIP IF BATTERS CHANGED
+    // FREEZE PARTNERSHIP
     // ----------------------------------
     if (partnershipChanged && prevPartnership) {
       writes.push(
@@ -210,7 +213,7 @@ export const scorecardOnBall = onValueWritten(
     }
 
     // ----------------------------------
-    // LIVE PARTNERSHIP (EVERY BALL)
+    // LIVE PARTNERSHIP
     // ----------------------------------
     if (p2 && p2s) {
       writes.push(
@@ -228,7 +231,7 @@ export const scorecardOnBall = onValueWritten(
     }
 
     // ----------------------------------
-    // WICKET LOGIC
+    // WICKET
     // ----------------------------------
     if (newEvent.startsWith("W")) {
       writes.push(
@@ -249,19 +252,6 @@ export const scorecardOnBall = onValueWritten(
       );
     }
 
-    // ----------------------------------
-    // EXECUTE
-    // ----------------------------------
     await Promise.all(writes);
   }
 );
-
-// ----------------------------------
-// HELPERS
-// ----------------------------------
-function normalizeId(name: string) {
-  return name
-    .toLowerCase()
-    .replace(/\s+/g, "_")
-    .replace(/[^a-z0-9_]/g, "");
-}

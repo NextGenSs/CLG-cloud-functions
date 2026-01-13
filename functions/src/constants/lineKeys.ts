@@ -11,4 +11,11 @@ export const LineKeys = {
   EVENT: "r",
   SESSION: "sn",
   LAST_MARKET: "lm",
+
+  INNING: "i",
+  INN_1_BAT: "i1b",
+  INN_3_BAT: "i3b",
+
+  TEAM_A: "t1",
+  TEAM_B: "t2",
 };
