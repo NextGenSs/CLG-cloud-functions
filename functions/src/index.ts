@@ -2,7 +2,7 @@ import * as admin from "firebase-admin";
 
 admin.initializeApp();
 
-export { oddsOnBall } from "./triggers/odds/oddsOnBall";
+export { oddsOnBall } from "./triggers/odds/oddsOnLineChange";
 export { scorecardOnLineChange } from "./triggers/scorecard/scorecardOnLineChange"
 
 

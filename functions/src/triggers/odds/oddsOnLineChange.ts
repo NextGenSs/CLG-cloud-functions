@@ -3,7 +3,7 @@ import * as admin from "firebase-admin";
 import { ALLOWED_MATCH_FORMATS } from "../../constants/oddsConstants";
 import { parseOverBall } from "../../utils/overBallUtils";
 
-export const oddsOnBall = onValueWritten(
+export const oddsOnLineChange = onValueWritten(
   "/line/{matchId}",
   async (event) => {
     const matchId = event.params.matchId;
